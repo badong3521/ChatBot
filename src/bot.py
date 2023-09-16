@@ -8,7 +8,6 @@ from src.aclient import client
 from discord import app_commands
 from src import log, art, personas, responses
 
-
 def run_discord_bot():
     @client.event
     async def on_ready():
@@ -19,7 +18,7 @@ def run_discord_bot():
         logger.info(f'{client.user} is now running!')
 
 
-    @client.tree.command(name="chat", description="Have a chat with ChatGPT")
+    @client.tree.command(name="chat", description="Trò chuyện với Em của Thảo Chi")
     async def chat(interaction: discord.Interaction, *, message: str):
         if client.is_replying_all == "True":
             await interaction.response.defer(ephemeral=False)
@@ -32,40 +31,40 @@ def run_discord_bot():
         username = str(interaction.user)
         client.current_channel = interaction.channel
         logger.info(
-            f"\x1b[31m{username}\x1b[0m : /chat [{message}] in ({client.current_channel})")
+            f"\x1b[31m{username}\x1b[0m : /chat [{message}] trong kênh ({client.current_channel})")
 
         await client.enqueue_message(interaction, message)
 
 
-    @client.tree.command(name="private", description="Toggle private access")
+    @client.tree.command(name="private", description="Nhắn tin riêng với em của Thảo Chi")
     async def private(interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=False)
         if not client.isPrivate:
             client.isPrivate = not client.isPrivate
             logger.warning("\x1b[31mSwitch to private mode\x1b[0m")
             await interaction.followup.send(
-                "> **INFO: Next, the response will be sent via private reply. If you want to switch back to public mode, use `/public`**")
+                "> **Phản hồi sẽ được gửi qua trả lời riêng. Nếu bạn muốn chuyển về chế độ công khai, hãy sử dụng`/public`**")
         else:
-            logger.info("You already on private mode!")
+            logger.info("Bạn đã ở chế độ riêng tư!")
             await interaction.followup.send(
-                "> **WARN: You already on private mode. If you want to switch to public mode, use `/public`**")
+                "> **Bạn đã ở chế độ riêng tư. Nếu bạn muốn chuyển sang chế độ công khai, hãy sử dụng `/public`**")
 
 
-    @client.tree.command(name="public", description="Toggle public access")
+    @client.tree.command(name="public", description="Đặt câu hỏi chung cho mọi người tham khảo nào!")
     async def public(interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=False)
         if client.isPrivate:
             client.isPrivate = not client.isPrivate
             await interaction.followup.send(
-                "> **INFO: Next, the response will be sent to the channel directly. If you want to switch back to private mode, use `/private`**")
+                "> **Phản hồi sẽ được gửi trực tiếp đến kênh. Nếu bạn muốn chuyển về chế độ riêng tư, hãy sử dụng `/private`**")
             logger.warning("\x1b[31mSwitch to public mode\x1b[0m")
         else:
             await interaction.followup.send(
-                "> **WARN: You already on public mode. If you want to switch to private mode, use `/private`**")
-            logger.info("You already on public mode!")
+                "> **Bạn đã ở chế độ công khai. Nếu bạn muốn chuyển sang chế độ riêng tư, hãy sử dụng `/private`**")
+            logger.info("Bạn đã ở chế độ công khai !")
 
 
-    @client.tree.command(name="replyall", description="Toggle replyAll access")
+    @client.tree.command(name="replyall", description="Chuyển đổi trả lời Tất cả quyền truy cập")
     async def replyall(interaction: discord.Interaction):
         client.replying_all_discord_channel_id = str(interaction.channel_id)
         await interaction.response.defer(ephemeral=False)
@@ -151,8 +150,8 @@ def run_discord_bot():
     async def help(interaction: discord.Interaction):
         await interaction.response.defer(ephemeral=False)
         await interaction.followup.send(""":star: **BASIC COMMANDS** \n
-        - `/chat [message]` Chat with ChatGPT!
-        - `/draw [prompt]` Generate an image with the Dalle2 model
+        - `/chat [message]` Trò chuyện cùng Em của Thảo Chi!
+        - `/draw [prompt]` Tạo hình ảnh với mô hình Dalle2
         - `/switchpersona [persona]` Switch between optional ChatGPT jailbreaks
                 `random`: Picks a random persona
                 `chatgpt`: Standard ChatGPT mode
@@ -163,7 +162,7 @@ def run_discord_bot():
                 `oppo`: OPPO says exact opposite of what ChatGPT would say
                 `dev`: Developer Mode, v2 Developer mode enabled
 
-        - `/private` ChatGPT switch to private mode
+        - `/private`Em của Thảo Chi chuyển sang chế độ riêng tư
         - `/public` ChatGPT switch to public mode
         - `/replyall` ChatGPT switch between replyAll mode and default mode
         - `/reset` Clear ChatGPT conversation history
